@@ -1,79 +1,183 @@
-USE school_management_db;
-SHOW TABLES;
+-- ============================================
+-- WEEK 1 DATABASE ASSIGNMENT
+-- SCHOOL MANAGEMENT SYSTEM
+-- Author: Edwin Jacob
+-- ============================================
+
+-- Create the database
+CREATE DATABASE school_management;
+
+-- Select the database
+USE school_management;
+
+
+-- ============================================
+-- 1. Create Students Table
+-- ============================================
+
+CREATE TABLE students (
+    student_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    gender VARCHAR(10),
+    date_of_birth DATE,
+    phone VARCHAR(20)
+);
+
+
+-- ============================================
+-- 2. Create Teachers Table
+-- ============================================
+
 CREATE TABLE teachers (
     teacher_id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    phone VARCHAR(20),
-    subject VARCHAR(50) NOT NULL
+    subject VARCHAR(100),
+    phone VARCHAR(20)
 );
+
+
+-- ============================================
+-- 3. Create Classes Table
+-- ============================================
+
 CREATE TABLE classes (
     class_id INT AUTO_INCREMENT PRIMARY KEY,
     class_name VARCHAR(50) NOT NULL,
     teacher_id INT,
-    FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id)
+    room_number VARCHAR(20),
+
+    FOREIGN KEY (teacher_id)
+        REFERENCES teachers(teacher_id)
 );
-CREATE TABLE classes (
-    class_id INT AUTO_INCREMENT PRIMARY KEY,
-    class_name VARCHAR(50) NOT NULL,
-    teacher_id INT,
-    FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id)
-);
+
+
+-- ============================================
+-- 4. Create Subjects Table
+-- ============================================
+
 CREATE TABLE subjects (
     subject_id INT AUTO_INCREMENT PRIMARY KEY,
     subject_name VARCHAR(100) NOT NULL,
-    description TEXT
+    teacher_id INT,
+
+    FOREIGN KEY (teacher_id)
+        REFERENCES teachers(teacher_id)
 );
-CREATE TABLE student_subjects (
-    student_id INT NOT NULL,
-    subject_id INT NOT NULL,
-    PRIMARY KEY (student_id, subject_id),
-    FOREIGN KEY (student_id) REFERENCES students(student_id),
-    FOREIGN KEY (subject_id) REFERENCES subjects(subject_id)
-);
+
+
+-- ============================================
+-- 5. Insert Students
+-- ============================================
+
 INSERT INTO students
-(first_name, last_name, date_of_birth, gender, email, phone, admission_date)
+(first_name, last_name, gender, date_of_birth, phone)
 VALUES
-('John', 'Kamau', '2010-05-12', 'Male', 'john@example.com', '0712345678', '2024-01-10'),
-('Mary', 'Wanjiku', '2011-08-20', 'Female', 'mary@example.com', '0723456789', '2024-01-10'),
-('David', 'Otieno', '2010-11-03', 'Male', 'david@example.com', '0734567890', '2024-01-11');
+('John', 'Ero', 'Male', '2010-05-12', '0712345678'),
+('Mary', 'Akinyi', 'Female', '2011-03-20', '0723456789'),
+('Peter', 'Lokwale', 'Male', '2010-11-08', '0734567890'),
+('Nancy', 'Lobei', 'Female', '2011-07-15', '0745678901');
+
+
+-- ============================================
+-- 6. Insert Teachers
+-- ============================================
+
 INSERT INTO teachers
-(first_name, last_name, email, phone, subject)
+(first_name, last_name, subject, phone)
 VALUES
-('Peter', 'Mwangi', 'peter@school.com', '0700112233', 'Mathematics'),
-('Jane', 'Achieng', 'jane@school.com', '0700223344', 'English'),
-('Samuel', 'Kiptoo', 'samuel@school.com', '0700334455', 'Science');
-INSERT INTO classes (class_name, teacher_id)
+('David', 'Ekitela', 'Mathematics', '0711111111'),
+('Grace', 'Lomor', 'English', '0722222222'),
+('James', 'Erupe', 'Agriculture', '0733333333');
+
+
+-- ============================================
+-- 7. Insert Classes
+-- ============================================
+
+INSERT INTO classes
+(class_name, teacher_id, room_number)
 VALUES
-('Grade 8A', 1),
-('Grade 8B', 2),
-('Grade 9A', 3);
-INSERT INTO subjects (subject_name, description)
+('Form 1A', 1, 'Room 101'),
+('Form 2A', 2, 'Room 102'),
+('Form 3A', 3, 'Room 103');
+
+
+-- ============================================
+-- 8. Insert Subjects
+-- ============================================
+
+INSERT INTO subjects
+(subject_name, teacher_id)
 VALUES
-('Mathematics', 'Study of numbers and problem solving'),
-('English', 'Language and literature'),
-('Science', 'Study of the natural world'),
-('Computer Studies', 'Study of computers and technology');
-INSERT INTO student_subjects (student_id, subject_id)
-VALUES
-(1, 1),
-(1, 2),
-(1, 3),
-(2, 1),
-(2, 2),
-(2, 4),
-(3, 1),
-(3, 3),
-(3, 4);
+('Mathematics', 1),
+('English', 2),
+('Agriculture', 3);
 
 
+-- ============================================
+-- 9. Display All Tables
+-- ============================================
+
+SHOW TABLES;
 
 
+-- ============================================
+-- 10. Display Students
+-- ============================================
+
+SELECT * FROM students;
 
 
+-- ============================================
+-- 11. Display Teachers
+-- ============================================
+
+SELECT * FROM teachers;
 
 
+-- ============================================
+-- 12. Display Classes
+-- ============================================
+
+SELECT * FROM classes;
 
 
+-- ============================================
+-- 13. Display Subjects
+-- ============================================
 
+SELECT * FROM subjects;
+
+
+-- ============================================
+-- 14. Display Classes and Their Teachers
+-- ============================================
+
+SELECT
+    classes.class_name,
+    classes.room_number,
+    teachers.first_name,
+    teachers.last_name
+FROM classes
+JOIN teachers
+ON classes.teacher_id = teachers.teacher_id;
+
+
+-- ============================================
+-- 15. Display Subjects and Their Teachers
+-- ============================================
+
+SELECT
+    subjects.subject_name,
+    teachers.first_name,
+    teachers.last_name
+FROM subjects
+JOIN teachers
+ON subjects.teacher_id = teachers.teacher_id;
+
+
+-- ============================================
+-- END OF ASSIGNMENT
+-- ============================================
